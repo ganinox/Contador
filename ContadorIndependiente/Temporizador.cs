@@ -26,8 +26,6 @@ namespace Contador
 
         public bool Disponible { get; set; } = false;
         public string Tiempo
-
-
         {
             get => string.Format("{0:00}:{1:00}:{2:00}", Transcurso.Hours, Transcurso.Minutes, Transcurso.Seconds);
         }
@@ -53,20 +51,24 @@ namespace Contador
                 BalloonTipTitle = "El temporizador ha finalizado"
                 
             };
+
             if (Mando == 1)
             {
                 notifyIcon.BalloonTipText = "El Tiempo del cliente"+Cliente+"En la consola" + consoleName + " Con " + Mando + " mando" + " ha finalizado.";
             }
+
             else
             {
                 notifyIcon.BalloonTipText = "El Tiempo del cliente" + Cliente + "En la consola" + consoleName + " Con " + Mando + " mandos" + " ha finalizado.";
             }
+
             notifyIcon.ShowBalloonTip(5000);
 
             Timer closeNotification = new Timer
             {
                 Interval = 10000 //5 minutes in milliseconds
             };
+
             closeNotification.Start();
         }
 
@@ -100,14 +102,12 @@ namespace Contador
 
             if (Transcurso.TotalSeconds <= 0)
             {
-
                 Disponible = true;
                 OnPropertyChanged("Disponible");
                 Notificaciones(Consola, Mandos,Cliente);
                 ReproducirSonido();
                 Pausa();
                 Disponible = true;
-                
             }
 
         }
@@ -117,6 +117,7 @@ namespace Contador
             {
                 Stream = Resources.Alerta_Ping
             };
+
             sonido.Play();
         }
 
@@ -125,6 +126,7 @@ namespace Contador
         //Implementación de la Interfaz INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         private readonly object _lock = new object();
+
         private void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             lock (_lock)
@@ -135,9 +137,9 @@ namespace Contador
                 });
             }
         }
-
-
     }
+
+    // Clase de Utilidades
     public static class ControlExtensions
     {
         public static void InvokeIfRequired(this Control control, Action action)
