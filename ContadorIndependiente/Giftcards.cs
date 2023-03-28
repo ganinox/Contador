@@ -4,38 +4,21 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Contador
 {
-    public partial class Caja : Form
+    public partial class Giftcards : Form
     {
-        private string tipoTransaccion;
-        decimal totalDolares = 0;
-        decimal totalBolivares = 0;
-        decimal totalPuntoVenta = 0;
-        decimal totalTransferencia = 0;
-        decimal totalPagoMovil = 0;
-        decimal totalZelle = 0;
-        decimal totalPaypal = 0;
-        decimal totalBinance = 0;
-
-
-   
-        
-
-
-
-        public Caja()
+        public Giftcards()
         {
             InitializeComponent();
-            ArchivoDeCaja();
+            ArchivoDeGiftCards();
+            ArchivoDeSaldos();
+            ListarGiftcards();
             CrearDT();
         }
         [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
@@ -43,10 +26,9 @@ namespace Contador
 
         [DllImport("user32.DLL", EntryPoint = "SendMessage")]
         private extern static void SendMessage(System.IntPtr hwnd, int wmsg, int wparam, int lparam);
-
-        private void ArchivoDeCaja()
+        private void ArchivoDeGiftCards()
         {
-            string filePath = Path.Combine(Application.StartupPath, "Datos.txt");
+            string filePath = Path.Combine(Application.StartupPath, "GiftCards.txt");
 
             if (!File.Exists(filePath))
             {
@@ -55,12 +37,76 @@ namespace Contador
                 sw.Close();
             }
         }
+        private void ArchivoDeSaldos()
+        {
+            string filePath = Path.Combine(Application.StartupPath, "Saldos.txt");
+
+            if (!File.Exists(filePath))
+            {
+                // Crear archivo de texto
+                StreamWriter sw = new StreamWriter(filePath);
+                sw.Close();
+            }
+        }
+        private void ListarGiftcards()
+        {
+            string filePath = Path.Combine(Application.StartupPath, "GiftCards.txt");
+            string[] lines = File.ReadAllLines(filePath);
+
+            // Agregar la primera palabra de cada línea al ComboBox
+            foreach (string line in lines)
+            {
+                string[] words = line.Split(',');
+                if (words.Length > 0)
+                {
+                    CmbTarjetas.Items.Add(words[0]);
+                }
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Guardar();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void Guardar()
+        {
+            string filePath = Path.Combine(Application.StartupPath, "Saldos.txt");
+
+            // Obtener valores de los controles
+            decimal monto = Convert.ToDecimal(TxtMonto.Text);
+            string tipoTransaccion = CmbTransaccion.SelectedItem.ToString();
+            string Tarjeta = CmbTarjetas.SelectedItem.ToString();
+
+
+
+            // Escribir los datos en el archivo
+            StreamWriter sw = new StreamWriter(filePath, true);
+            sw.WriteLine($"{monto},{tipoTransaccion},{Tarjeta}");
+            sw.Close();
+
+            // Mostrar mensaje de éxito
+            MessageBox.Show("Datos guardados exitosamente");
+
+            // Limpiar los controles
+            TxtMonto.Text = "";
+            CmbTransaccion.SelectedIndex = -1;
+            CmbTarjetas.SelectedIndex = -1;
+            CrearDT();
+        }
         private void CrearDT()
         {
-            string pathDatos = Path.Combine(Application.StartupPath, "Datos.txt");
+            string pathDatos = Path.Combine(Application.StartupPath, "Saldos.txt");
             DataTable dt = new DataTable();
             dt.Columns.Add("Transaccion", typeof(string));
-            dt.Columns.Add("Metodo de Pago", typeof(string));
+            dt.Columns.Add("Tarjeta", typeof(string));
             dt.Columns.Add("Monto", typeof(decimal));
             using (StreamReader sr = new StreamReader(pathDatos))
             {
@@ -78,76 +124,13 @@ namespace Contador
             dataGridView1.DataSource = dt;
             MostrarDatos();
         }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Guardar();
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            
-        }
-
-        private void Guardar()
-        {
-            string filePath = Path.Combine(Application.StartupPath, "Datos.txt");
-
-            // Obtener valores de los controles
-            decimal monto = Convert.ToDecimal(TxtMonto.Text);
-            string tipoTransaccion = CmbTransaccion.SelectedItem.ToString();
-            string metodoPago = CmbMetodo.SelectedItem.ToString();
-
-            // Calcular la diferencia según el tipo de transacción
-            decimal diferencia = 0;
-
-            if (tipoTransaccion == "Ingreso")
-            {
-                diferencia = monto;
-            }
-            else if (tipoTransaccion == "Egreso")
-            {
-                diferencia = -monto;
-            }
-
-            // Escribir los datos en el archivo
-            StreamWriter sw = new StreamWriter(filePath, true);
-            sw.WriteLine($"{monto},{tipoTransaccion},{metodoPago}");
-            sw.Close();
-
-            // Mostrar mensaje de éxito
-            MessageBox.Show("Datos guardados exitosamente");
-
-            // Limpiar los controles
-            TxtMonto.Text = "";
-            CmbTransaccion.SelectedIndex = -1;
-            CmbMetodo.SelectedIndex = -1;
-
-            // Actualizar el total según el método de pago
-           
-            CrearDT();
-        }
-        private void CmbTransaccion_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (CmbTransaccion.SelectedIndex == 0)
-            {
-                tipoTransaccion = "Ingreso";
-            }
-            else if (CmbTransaccion.SelectedIndex == 1)
-            {
-                tipoTransaccion = "Egreso";
-            }
-        }
         private void MostrarDatos()
         {
-            string pathDatos = Path.Combine(Application.StartupPath, "Datos.txt");
+            string pathDatos = Path.Combine(Application.StartupPath, "Saldos.txt");
 
             DataTable dt = new DataTable();
             dt.Columns.Add("Transaccion", typeof(string));
-            dt.Columns.Add("Metodo de Pago", typeof(string));
+            dt.Columns.Add("Tarjeta", typeof(string));
             dt.Columns.Add("Monto", typeof(decimal));
 
             Dictionary<string, decimal> ingresosPorMetodoPago = new Dictionary<string, decimal>();
@@ -160,41 +143,40 @@ namespace Contador
                 {
                     string[] parts = line.Split(',');
                     string transaccion = parts[1];
-                    string metodoPago = parts[2];
+                    string Tarjeta = parts[2];
                     decimal monto = decimal.Parse(parts[0]);
 
-                    dt.Rows.Add(transaccion, metodoPago, monto);
+                    dt.Rows.Add(transaccion, Tarjeta, monto);
 
                     if (transaccion == "Ingreso")
                     {
-                        if (ingresosPorMetodoPago.ContainsKey(metodoPago))
+                        if (ingresosPorMetodoPago.ContainsKey(Tarjeta))
                         {
-                            ingresosPorMetodoPago[metodoPago] += monto;
+                            ingresosPorMetodoPago[Tarjeta] += monto;
                         }
                         else
                         {
-                            ingresosPorMetodoPago[metodoPago] = monto;
+                            ingresosPorMetodoPago[Tarjeta] = monto;
                         }
                     }
                     else if (transaccion == "Egreso")
                     {
-                        if (egresosPorMetodoPago.ContainsKey(metodoPago))
+                        if (egresosPorMetodoPago.ContainsKey(Tarjeta))
                         {
-                            egresosPorMetodoPago[metodoPago] += monto;
+                            egresosPorMetodoPago[Tarjeta] += monto;
                         }
                         else
                         {
-                            egresosPorMetodoPago[metodoPago] = monto;
+                            egresosPorMetodoPago[Tarjeta] = monto;
                         }
                     }
                 }
             }
-
             dataGridView1.DataSource = dt;
             dataGridView1.AutoResizeColumns();
 
             DataTable dt2 = new DataTable();
-            dt2.Columns.Add("Metodo de Pago", typeof(string));
+            dt2.Columns.Add("Tarjeta", typeof(string));
             dt2.Columns.Add("Ingresos", typeof(decimal));
             dt2.Columns.Add("Egresos", typeof(decimal));
             dt2.Columns.Add("Total", typeof(decimal));
@@ -211,33 +193,12 @@ namespace Contador
             dataGridView2.AutoResizeColumns();
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            CrearDT();
-        }
-
         private void TxtMonto_KeyPress(object sender, KeyPressEventArgs e)
         {
-            Validaciones.SoloDecimales(e,TxtMonto.Text);
+            Validaciones.SoloDecimales(e, TxtMonto.Text);
         }
 
-        private void PanelNombre_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void btnclose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private void Caja_MouseDown(object sender, MouseEventArgs e)
-        {
-            ReleaseCapture();
-            SendMessage(this.Handle, 0x112, 0xf012, 0);
-        }
-
-        private void PanelSuperior_MouseDown(object sender, MouseEventArgs e)
+        private void MoverFormulario(object sender, MouseEventArgs e)
         {
             ReleaseCapture();
             SendMessage(this.Handle, 0x112, 0xf012, 0);
@@ -254,6 +215,11 @@ namespace Contador
             {
                 this.WindowState = FormWindowState.Normal;
             }
+        }
+
+        private void btnclose_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

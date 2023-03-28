@@ -21,8 +21,8 @@ namespace Contador
         private TimeSpan Transcurso = TimeSpan.FromSeconds(0);
         private readonly DataGridView _dataGridView;
         public string Cliente { get; set; }
-        public string HoraEntrada { get; set; }
-        public string HoraSalida { get; set; }
+        public string Entrada { get; set; }
+        public string Salida { get; set; }
 
         public bool Disponible { get; set; } = false;
         public string Tiempo
@@ -54,19 +54,19 @@ namespace Contador
 
             if (Mando == 1)
             {
-                notifyIcon.BalloonTipText = "El Tiempo del cliente"+Cliente+"En la consola" + consoleName + " Con " + Mando + " mando" + " ha finalizado.";
+                notifyIcon.BalloonTipText = "El Tiempo del cliente "+Cliente+" en la consola " + consoleName + " con " + Mando + " mando" + " ha finalizado.";
             }
 
             else
             {
-                notifyIcon.BalloonTipText = "El Tiempo del cliente" + Cliente + "En la consola" + consoleName + " Con " + Mando + " mandos" + " ha finalizado.";
+                notifyIcon.BalloonTipText = "El Tiempo del cliente " + Cliente + " en la consola " + consoleName + " con " + Mando + " mandos" + " ha finalizado.";
             }
 
             notifyIcon.ShowBalloonTip(5000);
 
             Timer closeNotification = new Timer
             {
-                Interval = 10000 //5 minutes in milliseconds
+                Interval = 10000 //5 minutes en milisegundos
             };
 
             closeNotification.Start();
@@ -79,8 +79,8 @@ namespace Contador
             DateTime fechaHora = DateTime.Now;
             DateTime horaEntradaDT = fechaHora.Date.Add(fechaHora.TimeOfDay);
             DateTime horaSalidaDT = horaEntradaDT.AddSeconds(Transcurso.TotalSeconds);
-            HoraEntrada = horaEntradaDT.ToString(@"hh\:mm\:ss");
-            HoraSalida = horaSalidaDT.ToString(@"hh\:mm\:ss");
+            Entrada = horaEntradaDT.ToString(@"hh\:mm\:ss");
+            Salida = horaSalidaDT.ToString(@"hh\:mm\:ss");
         }
         public void AsignarMando(int mando)
         {

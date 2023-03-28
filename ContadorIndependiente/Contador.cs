@@ -26,7 +26,7 @@ namespace Contador
             DgvContador.CellContentClick += DgvContador_CellContentClick;
             DgvContador.RowPostPaint += DgvContador_RowPostPaint; ;
             label1.Left = (ClientSize.Width - label1.Width) / 2;
-            DgvContador.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            
 
         }
 
@@ -79,8 +79,8 @@ namespace Contador
             {
                 combo.Items.Add(i.ToString());
             }
-            combo.DefaultCellStyle.NullValue = "0";
-            combo.ValueMember = "0";
+            combo.DefaultCellStyle.NullValue = "1";
+            combo.ValueMember = "1";
             return combo;
         }
         //Función que crea un botón en la grilla
@@ -155,12 +155,19 @@ namespace Contador
         {
             try
             {
-                var senderGrid = (DataGridView)sender;
-                var consola = senderGrid.Rows[e.RowIndex].DataBoundItem as Temporizador;
-                var button = senderGrid.Columns[e.ColumnIndex] as DataGridViewButtonColumn;
-                if (button is null || consola is null)
-                    return;
-                AccionesDeBotones(consola, button.Name, e);
+                if (e.RowIndex < 0)
+                {
+
+                }
+                else
+                {
+                    var senderGrid = (DataGridView)sender;
+                    var consola = senderGrid.Rows[e.RowIndex].DataBoundItem as Temporizador;
+                    var button = senderGrid.Columns[e.ColumnIndex] as DataGridViewButtonColumn;
+                    if (button is null || consola is null)
+                        return;
+                    AccionesDeBotones(consola, button.Name, e);
+                }
             }
             catch (Exception ex)
             {
@@ -175,9 +182,13 @@ namespace Contador
             if (accion == "Iniciar")
             {
 
-                consola.Play();
+                
                 AsignarMandoConsola(e);
+                AsignarClienteConsola(e);
+
+                consola.Play();
                 DgvContador.Refresh();
+
             }
 
             if (accion == "Parar")
@@ -191,6 +202,8 @@ namespace Contador
             {
                 AsignarTiempoConsola(e);
                 AsignarMandoConsola(e);
+                AsignarClienteConsola(e);
+
                 DgvContador.Refresh();
             }
 
@@ -262,8 +275,14 @@ namespace Contador
         {
             int filaSeleccionada = e.RowIndex;
             Temporizador consolaSeleccionada = (Temporizador)DgvContador.Rows[filaSeleccionada].DataBoundItem;
-            consolaSeleccionada.AsignarMando(Convert.ToInt32(DgvContador.Rows[filaSeleccionada].Cells["Mandos"].Value ?? 0));
-            DgvContador.Rows[0].Cells[1].Value = Convert.ToString(Convert.ToInt32(DgvContador.Rows[filaSeleccionada].Cells["Mandos"].Value ?? 0));
+            consolaSeleccionada.AsignarMando(Convert.ToInt32(DgvContador.Rows[filaSeleccionada].Cells["Mandos"].Value ?? 1));
+            DgvContador.Rows[0].Cells[1].Value = Convert.ToString(Convert.ToInt32(DgvContador.Rows[filaSeleccionada].Cells["Mandos"].Value ?? 1));
+        }
+        private void AsignarClienteConsola(DataGridViewCellEventArgs e)
+        {
+            int filaseleccionada = e.RowIndex;
+            Temporizador consolaSeelccionada = (Temporizador)DgvContador.Rows[filaseleccionada].DataBoundItem;
+            consolaSeelccionada.AsignarCliente(Convert.ToString(DgvContador.Rows[filaseleccionada].Cells["Cliente"].Value ?? "Anonimo"));
         }
 
 
@@ -284,10 +303,14 @@ namespace Contador
             {
                 this.WindowState = FormWindowState.Maximized;
                 label1.Left = (ClientSize.Width - label1.Width) / 2;
+                DgvContador.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                DgvContador.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                
             }
             else
             {
                 this.WindowState = FormWindowState.Normal;
+                
             }
         }
 
@@ -346,6 +369,13 @@ namespace Contador
 
             Caja.Show();
                 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Form Caja = new Giftcards();
+
+            Caja.Show();
         }
     }
 }
