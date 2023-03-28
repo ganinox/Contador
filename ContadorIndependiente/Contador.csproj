@@ -58,9 +58,6 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
-  </PropertyGroup>
-  <PropertyGroup>
     <ApplicationIcon>SistemaIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
@@ -89,6 +86,7 @@
     <Compile Include="Caja.Designer.cs">
       <DependentUpon>Caja.cs</DependentUpon>
     </Compile>
+    <Compile Include="Prueba.cs" />
     <Compile Include="Temporizador.cs" />
     <Compile Include="Contador.cs">
       <SubType>Form</SubType>
