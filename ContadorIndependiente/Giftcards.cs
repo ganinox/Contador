@@ -1,4 +1,4 @@
-﻿using Dominio;
+﻿using ContadorSinErrores;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,6 +20,7 @@ namespace Contador
             ArchivoDeSaldos();
             ListarGiftcards();
             CrearDT();
+            Limpiar();
         }
         [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
         private extern static void ReleaseCapture();
@@ -100,6 +101,7 @@ namespace Contador
             CmbTransaccion.SelectedIndex = -1;
             CmbTarjetas.SelectedIndex = -1;
             CrearDT();
+            Limpiar();
         }
         private void CrearDT()
         {
@@ -220,6 +222,12 @@ namespace Contador
         private void btnclose_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+        private void Limpiar()
+        {
+            TxtMonto.Text = "0.00";
+            CmbTransaccion.SelectedIndex = 0;
+            CmbTarjetas.SelectedIndex = 0;
         }
     }
 }

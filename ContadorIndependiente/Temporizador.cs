@@ -7,8 +7,9 @@ using Contador;
 using System.Data;
 using System.Text;
 using System.Threading.Tasks;
-using Contador.Properties;
+
 using System.Globalization;
+using Contador.Properties;
 
 namespace Contador
 {
@@ -41,7 +42,7 @@ namespace Contador
             AsignarMando(Mandos);
             AsignarCliente(Cliente);
         }
-        private void Notificaciones(string consoleName, int Mando,string Cliente)
+        private void Notificaciones(string consoleName, int Mando, string Cliente)
         {
             NotifyIcon notifyIcon = new NotifyIcon
             {
@@ -49,12 +50,12 @@ namespace Contador
                 Visible = true,
                 Text = "Notificacion",
                 BalloonTipTitle = "El temporizador ha finalizado"
-                
+
             };
 
             if (Mando == 1)
             {
-                notifyIcon.BalloonTipText = "El Tiempo del cliente "+Cliente+" en la consola " + consoleName + " con " + Mando + " mando" + " ha finalizado.";
+                notifyIcon.BalloonTipText = "El Tiempo del cliente " + Cliente + " en la consola " + consoleName + " con " + Mando + " mando" + " ha finalizado.";
             }
 
             else
@@ -104,7 +105,7 @@ namespace Contador
             {
                 Disponible = true;
                 OnPropertyChanged("Disponible");
-                Notificaciones(Consola, Mandos,Cliente);
+                Notificaciones(Consola, Mandos, Cliente);
                 ReproducirSonido();
                 Pausa();
                 Disponible = true;

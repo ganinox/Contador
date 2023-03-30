@@ -1,10 +1,12 @@
 ﻿
+using Contador;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +28,7 @@ namespace Contador
             DgvContador.CellContentClick += DgvContador_CellContentClick;
             DgvContador.RowPostPaint += DgvContador_RowPostPaint; ;
             label1.Left = (ClientSize.Width - label1.Width) / 2;
-            
+
 
         }
 
@@ -182,7 +184,7 @@ namespace Contador
             if (accion == "Iniciar")
             {
 
-                
+
                 AsignarMandoConsola(e);
                 AsignarClienteConsola(e);
 
@@ -289,12 +291,12 @@ namespace Contador
         #region Botones de interfaz
         private void Btnclose_Click(object sender, EventArgs e)
         {
-            
-           if( MessageBox.Show("Seguro que desea salir","Alerta",MessageBoxButtons.YesNo)== DialogResult.Yes)
+
+            if (MessageBox.Show("Seguro que desea salir", "Alerta", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 Application.Exit();
             }
-            
+
         }
 
         private void PictureBox2_Click(object sender, EventArgs e)
@@ -305,12 +307,12 @@ namespace Contador
                 label1.Left = (ClientSize.Width - label1.Width) / 2;
                 DgvContador.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
                 DgvContador.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                
+
             }
             else
             {
                 this.WindowState = FormWindowState.Normal;
-                
+
             }
         }
 
@@ -363,19 +365,19 @@ namespace Contador
 
         #endregion
 
-        private void button1_Click(object sender, EventArgs e)
+        private void BtnCaja_Click(object sender, EventArgs e)
         {
             Form Caja = new Caja();
 
             Caja.Show();
-                
+
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void BtnGiftCards_Click(object sender, EventArgs e)
         {
-            Form Caja = new Giftcards();
+            Form Gift = new Giftcards();
 
-            Caja.Show();
+            Gift.Show();
         }
     }
 }

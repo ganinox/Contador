@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Contador;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Contador
+namespace ContadorSinErrores
 {
     internal static class Program
     {
@@ -16,7 +17,7 @@ namespace Contador
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Contador());
+            Application.Run(new Contador.Contador());
         }
     }
 }

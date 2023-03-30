@@ -1,10 +1,12 @@
-﻿using Dominio;
+﻿
+using ContadorSinErrores;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -17,26 +19,13 @@ namespace Contador
     public partial class Caja : Form
     {
         private string tipoTransaccion;
-        decimal totalDolares = 0;
-        decimal totalBolivares = 0;
-        decimal totalPuntoVenta = 0;
-        decimal totalTransferencia = 0;
-        decimal totalPagoMovil = 0;
-        decimal totalZelle = 0;
-        decimal totalPaypal = 0;
-        decimal totalBinance = 0;
-
-
-   
-        
-
-
 
         public Caja()
         {
             InitializeComponent();
             ArchivoDeCaja();
             CrearDT();
+            Limpiar();
         }
         [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
         private extern static void ReleaseCapture();
@@ -98,9 +87,12 @@ namespace Contador
 
             // Obtener valores de los controles
             decimal monto = Convert.ToDecimal(TxtMonto.Text);
-            string tipoTransaccion = CmbTransaccion.SelectedItem.ToString();
-            string metodoPago = CmbMetodo.SelectedItem.ToString();
 
+
+            
+            string tipoTransaccion = CmbTransaccion.SelectedItem.ToString();
+            
+            string metodoPago = CmbMetodo.SelectedItem.ToString();
             // Calcular la diferencia según el tipo de transacción
             decimal diferencia = 0;
 
@@ -114,17 +106,25 @@ namespace Contador
             }
 
             // Escribir los datos en el archivo
-            StreamWriter sw = new StreamWriter(filePath, true);
-            sw.WriteLine($"{monto},{tipoTransaccion},{metodoPago}");
-            sw.Close();
+            if(monto >=0)
+            {
+                try
+                {
+                    EscribirLinea(filePath, monto, tipoTransaccion, metodoPago);
+                }
+                catch ( Exception ex)
+                {
 
-            // Mostrar mensaje de éxito
-            MessageBox.Show("Datos guardados exitosamente");
+                    MessageBox.Show(ex.Message);
+                }
 
+            }
+            else
+            {
+                MessageBox.Show("Debe introducir un monto valido para guardar la transaccion.");
+            }
             // Limpiar los controles
-            TxtMonto.Text = "";
-            CmbTransaccion.SelectedIndex = -1;
-            CmbMetodo.SelectedIndex = -1;
+            Limpiar();
 
             // Actualizar el total según el método de pago
            
@@ -140,6 +140,20 @@ namespace Contador
             {
                 tipoTransaccion = "Egreso";
             }
+        }
+
+        private void Limpiar()
+        {
+            TxtMonto.Text = "0.00";
+            CmbTransaccion.SelectedIndex = 0;
+            CmbMetodo.SelectedIndex = 0;
+        }
+        private void EscribirLinea(string filePath, decimal monto, string tipoTransaccion, string metodoPago)
+        {
+            StreamWriter sw = new StreamWriter(filePath, true);
+            sw.WriteLine($"{monto},{tipoTransaccion},{metodoPago}");
+            sw.Close();
+            MessageBox.Show("Datos guardados exitosamente");
         }
         private void MostrarDatos()
         {
@@ -218,7 +232,8 @@ namespace Contador
 
         private void TxtMonto_KeyPress(object sender, KeyPressEventArgs e)
         {
-            Validaciones.SoloDecimales(e,TxtMonto.Text);
+            Validaciones.SoloDecimales(e, TxtMonto.Text);
+            
         }
 
         private void PanelNombre_Paint(object sender, PaintEventArgs e)

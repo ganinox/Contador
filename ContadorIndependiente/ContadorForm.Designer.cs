@@ -1,4 +1,7 @@
-﻿namespace Contador
+﻿using Contador;
+
+namespace Contador
+
 {
     partial class Contador
     {
@@ -35,12 +38,12 @@
             this.PanelSuperior = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.PanelNombre = new System.Windows.Forms.Panel();
+            this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.PanelContenido = new System.Windows.Forms.Panel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnclose = new System.Windows.Forms.PictureBox();
-            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.DgvContador)).BeginInit();
             this.PanelSuperior.SuspendLayout();
             this.PanelNombre.SuspendLayout();
@@ -126,6 +129,16 @@
             this.PanelNombre.TabIndex = 1;
             this.PanelNombre.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PanelNombre_MouseDown);
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(128, 3);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(99, 39);
+            this.button2.TabIndex = 4;
+            this.button2.Text = "Giftcards";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.BtnGiftCards_Click);
+            // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(23, 4);
@@ -134,7 +147,7 @@
             this.button1.TabIndex = 3;
             this.button1.Text = "Caja";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.BtnCaja_Click);
             // 
             // PanelContenido
             // 
@@ -186,16 +199,6 @@
             this.btnclose.TabStop = false;
             this.btnclose.Click += new System.EventHandler(this.Btnclose_Click);
             // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(128, 3);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(99, 39);
-            this.button2.TabIndex = 4;
-            this.button2.Text = "Giftcards";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
             // Contador
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -237,3 +240,4 @@
         private System.Windows.Forms.Button button2;
     }
 }
+
